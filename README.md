@@ -6,29 +6,24 @@ This is my CV, rebuilt using Vue.
 
 ```sh
 npm install
+
+# if you want to run the build
 npm install -g serve
 ```
 
-### Compile and Hot-Reload for Development
+### Development mode
 
 ```sh
 npm run dev
+
+# to start and open in new tab
+npm run dev -- --open
 ```
 
-### Type-Check, Compile and
+### Build and run
 
 ```sh
 npm run build
-```
 
-### Run from dist after building
-
-```sh
 serve -s dist
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
 ```

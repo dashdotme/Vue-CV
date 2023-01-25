@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Intro from "../IntroTemplate.vue";
-import ContactItem from "../ContactItem.vue";
+import Intro from "../templates/IntroTemplate.vue";
+import ContactItem from "../templates/ContactItem.vue";
 import PhoneIcon from "../icons/IconPhone.vue";
 import MailIcon from "../icons/IconEmail.vue";
 import GitIcon from "../icons/IconGithub.vue";

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import Section from "../ContentTemplate.vue";
-import TechnicalSubItem from "../technical/TechnicalSubItem.vue";
-import TechnicalItem from "../technical/TechnicalItem.vue";
-import ScoreItem from "../technical/ScoreItem.vue";
+import Section from "../templates/ContentTemplate.vue";
+import TechnicalSubItem from "../templates/TechnicalSubItem.vue";
+import TechnicalItem from "../templates/TechnicalItem.vue";
+import ScoreItem from "../templates/ScoreItem.vue";
 
 interface TechData {
   type?: number; // used to scale the score component; 1 if 'sub-item' scaling is desired

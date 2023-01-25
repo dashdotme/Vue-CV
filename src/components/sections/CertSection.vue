@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Section from "../ContentTemplate.vue";
-import ContentItem from "../ContentItem.vue";
+import Section from "../templates/ContentTemplate.vue";
+import ContentItem from "../templates/ContentItem.vue";
 
 const azCert: { url: string; name: string; period: number } = {
   url: "https://www.credly.com/badges/1de277ca-e830-4274-88ff-0a341fc4d915/embedded",

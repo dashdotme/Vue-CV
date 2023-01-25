@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Section from "../ContentTemplate.vue";
-import ContentItem from "../ContentItem.vue";
+import Section from "../templates/ContentTemplate.vue";
+import ContentItem from "../templates/ContentItem.vue";
 
 const aboutItems: string[] = [
   "Earned my school's 'dux' title and scholarship offers a long time ago, getting perfect marks in economics.",
