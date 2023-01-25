@@ -10,7 +10,7 @@ const footer: {
   phone: string;
   separator: string;
 } = {
-  name: ``,
+  name: `Dash Vallance`,
   mailto: ``,
   email: ``,
   phone: ``,
@@ -18,7 +18,6 @@ const footer: {
 };
 
 const redacted: string = `Redacted`;
-const empty = "";
 </script>
 
 <template>
