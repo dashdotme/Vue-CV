@@ -25,15 +25,18 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    defaults: 
+      run:
+        shell: bash
+        working-directory: .
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Setup Pages
         uses: actions/configure-pages@v2
-        with: 
+        with:
           enablement: true
-
 
       - name: Cache Node.js dependencies
         uses: actions/setup-node@v3
@@ -48,22 +51,40 @@ jobs:
       - name: Build with Vite
         run: npm run build
 
+      - name: Upload build
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./dist
+
+      - name: Deploy to Github Pages
+        uses: actions/deploy-pages@v1
+
+      - name: Cleanup build
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: github-pages
+
       # Uses puppeteer to build pdf headless
-      - name: Generate PDF 
+      - name: Generate PDF
         uses: LukaszLapaj/html-to-pdf-action@2.0.0
         with:
           htmlFile: ./dist/index.html
           outputFile: ./pdf/DV_CV_public.pdf
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: './dist'
+      # Note: workflow pushes don't trigger workflows
+      - name: Push PDF to git
+        env: 
+          ci_email: 35617767+dashdotme@users.noreply.github.com
+          ci_author: dashdotme_pipelines
+        run: |
+          git config --global user.name "${{ env.ci_author }}"
+          git config --global user.email "${{ env.ci_email }}"
+          git commit --amend --no-edit
+          # don't do this in shared repos. Bloat history or stash, pull, merge instead.
+          git push -f 
 
-      - name: Deploy to Github Pages
-        uses: actions/deploy-pages@v1
-
-      - name: Cleanup
-        uses: geekyeggo/delete-artifact@v2
+      - name: Upload PDF
+        uses: actions/upload-artifact@v3
         with:
-          name: github-pages
+          name: DV_CV_public.pdf
+          path: ./pdf/
