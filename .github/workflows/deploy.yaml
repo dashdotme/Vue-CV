@@ -10,7 +10,7 @@ on:
 
 # Permissions for Github Pages
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -76,12 +76,12 @@ jobs:
         env: 
           ci_email: 35617767+dashdotme@users.noreply.github.com
           ci_author: dashdotme_pipelines
+          ci_cmt_msg: "chore: updated pdf"
         run: |
           git config --global user.name "${{ env.ci_author }}"
           git config --global user.email "${{ env.ci_email }}"
-          git commit --amend --no-edit
-          # don't do this in shared repos. Bloat history or stash, pull, merge instead.
-          git push -f 
+          git commit -a -m "${{ env.ci_cmt_msg }}"
+          git push
 
       - name: Upload PDF
         uses: actions/upload-artifact@v3

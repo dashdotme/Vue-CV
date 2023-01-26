@@ -5,7 +5,7 @@ import ContentItem from "../templates/ContentItem.vue";
 const aboutItems: string[] = [
   "Earned my school's 'dux' title and scholarship offers a long time ago, getting perfect marks in economics.",
   "Thought I'd be a writer growing up. Regularly wrote for the paper during school, drafting a novella and many bits and pieces by 20. Programming became the practical outlet for those skills. ",
-  "Newly passionate second-brain-er, after discovering 'Obsidian.md'. Love creating and documenting processes.",
+  "Newly passionate second-brain-er, after discovering 'Obsidian.md'. Love creating and documenting process.",
 ];
 </script>
 
