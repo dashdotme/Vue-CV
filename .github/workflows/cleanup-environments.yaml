@@ -1,4 +1,4 @@
-name: Delete environments
+name: Cleanup git logs
 
 on:
   delete:
@@ -13,6 +13,10 @@ permissions: write-all
 
 # Grab workflow ids via 
 # gh api -X GET /repos/$OWNER/$REPO/actions/workflows | jq '.workflows[] | .name,.id'
+
+env:
+  OWNER: dashdotme
+  REPO: Vue-CV
 
 jobs:
   pages:
@@ -31,12 +35,10 @@ jobs:
     steps:
       - name: Cleanup deploy flows
         env: 
-          GH_TOKEN: ${{ github.token }}
-          OWNER: dashdotme
-          REPO: Vue-CV
           WORKFLOW_ID: ${{ secrets.CV_DEPLOY_WORKFLOW_ID }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          timeout 10s bash -c "while gh api -X GET /repos/${{ env.OWNER }}/${{ env.REPO }}/actions/workflows/${{ env.WORKFLOW_ID }}/runs | jq '.workflow_runs[] | .id' | xargs -I{} gh api -X DELETE /repos/$OWNER/$REPO/actions/runs/{}; do echo ...; sleep 1; done"
+          timeout 10s bash -c "while gh api -X GET /repos/$OWNER/$REPO/actions/workflows/$WORKFLOW_ID/runs | jq '.workflow_runs[] | .id' | xargs -I{} gh api -X DELETE /repos/$OWNER/$REPO/actions/runs/{}; do echo ...; sleep 1; done"
           echo -e \\ndeploy flow cleanup fin
   
   destroyflows:
@@ -44,11 +46,9 @@ jobs:
     steps:
       - name: Cleanup destroy flows
         env: 
-          GH_TOKEN: ${{ github.token }}
-          OWNER: dashdotme
-          REPO: Vue-CV
           WORKFLOW_ID: ${{ secrets.CV_DESTROY_WORKFLOW_ID }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          timeout 10s bash -c "while gh api -X GET /repos/${{ env.OWNER }}/${{ env.REPO }}/actions/workflows/${{ env.WORKFLOW_ID }}/runs | jq '.workflow_runs[] | .id' | xargs -I{} gh api -X DELETE /repos/$OWNER/$REPO/actions/runs/{}; do echo ...; sleep 1; done"
+          timeout 10s bash -c "while gh api -X GET /repos/$OWNER/$REPO/actions/workflows/$WORKFLOW_ID/runs | jq '.workflow_runs[] | .id' | xargs -I{} gh api -X DELETE /repos/$OWNER/$REPO/actions/runs/{}; do echo ...; sleep 1; done"
           echo -e \\ndestroy flow cleanup fin
 
