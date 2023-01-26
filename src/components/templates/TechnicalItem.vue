@@ -15,7 +15,8 @@
   border-bottom: 1px solid #ccc;
   padding-bottom: 0.25em;
   margin-bottom: 0.25em;
-  font-size: 132%;
+  font-size: 150%;
+  font-weight: 500
 }
 
 .technical:first-child {

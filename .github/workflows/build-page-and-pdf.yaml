@@ -72,7 +72,7 @@ jobs:
         shell: bash
         working-directory: .
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -86,11 +86,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Adjust configs to run vue files without server
-      - name: Change build configs for pdf
+      - name: Amend files for pdf
         run: |
-          echo filler # to avoid enclosing below in quotes
-          sed -i s#'base: "/Vue-CV/"'#'base: "./"'#g vite.config.ts
+          # adjust configs to run vue files without server
+          sed -i s#'base: "/Vue-CV/"'#'base: "./"'#g vite.config.ts # Adjust configs to run vue files without server
+          # add line break for page
+          sed -i s#'{{\sitem.header\s}}'#'<span v-if="item.header === `Tools`" v-html="`<br/></br></br>`"></span>{{ item.header }}'#g ./src/components/sections/TechnicalSection.vue
 
       - name: Build with Vite
         run: npm run build
@@ -101,12 +102,13 @@ jobs:
         with:
           htmlFile: ./dist/index.html
           outputFile: ./pdf/DV_CV_public.pdf
+          pdfOptions: '{"format": "letter", "pageRanges": "1-2", "printBackground": true, "scale": 1.1, "margin": {"top": "10mm", "left": "10mm", "right": "10mm", "bottom": "10mm"}}'
 
       # Note: workflow pushes don't trigger workflows
       - name: Push PDF to Github
         env:
           ci_email: github-actions[bot]@users.noreply.github.com
-          ci_author: 'Github Action'
+          ci_author: Github Action
           ci_cmt_msg: "pipeline: updated pdf"
         run: |
           git config --local user.name "${{ env.ci_author }}"
