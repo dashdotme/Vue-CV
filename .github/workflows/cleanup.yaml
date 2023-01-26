@@ -1,0 +1,40 @@
+name: Delete deployment environments
+
+on:
+  delete:
+    branches-ignore:
+      - main
+  
+  workflow_dispatch:
+    branches: main
+
+permissions: write-all
+
+# Grab workflow ids via 
+# gh api -X GET /repos/$OWNER/$REPO/actions/workflows | jq '.workflows[] | .name,.id'
+
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cleanup deploy history
+        uses: strumwolf/delete-deployment-environment@v2
+        with:
+          # ⚠️ The provided token needs permission for admin write:org
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: github-pages
+          onlyRemoveDeployments: true
+
+      - name: Cleanup workflows
+        env: 
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          OWNER=dashdotme
+          REPO=Vue-CV
+          WORKFLOW_ID="${{ secrets.CV_WORKFLOW_ID }}"
+          timeout 1m bash -c "while gh api -X GET /repos/$OWNER/$REPO/actions/workflows/$WORKFLOW_ID/runs | jq '.workflow_runs[] | .id' | xargs -I{} gh api -X DELETE /repos/$OWNER/$REPO/actions/runs/{}; do echo ...; sleep 1; done"
+          echo -e \\ndeploy flow cleanup fin
+          WORKFLOW_ID="$${{ secrets.CV_DESTROY_WORKFLOW_ID }}"
+          timeout 1m bash -c "while gh api -X GET /repos/$OWNER/$REPO/actions/workflows/$WORKFLOW_ID/runs | jq '.workflow_runs[] | .id' | xargs -I{} gh api -X DELETE /repos/$OWNER/$REPO/actions/runs/{}; do echo ...; sleep 1; done"
+          echo -e \\ndestroy flow cleanup fin
+
