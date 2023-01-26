@@ -1,4 +1,4 @@
-name: Build and deploy to Pages + pdf
+name: Deploy as Github Page and PDF
 
 on:
   push:
@@ -105,12 +105,12 @@ jobs:
       # Note: workflow pushes don't trigger workflows
       - name: Push PDF to Github
         env:
-          ci_email: 35617767+dashdotme@users.noreply.github.com
-          ci_author: dashdotme_pipelines
+          ci_email: github-actions[bot]@users.noreply.github.com
+          ci_author: 'Github Action'
           ci_cmt_msg: "pipeline: updated pdf"
         run: |
-          git config --global user.name "${{ env.ci_author }}"
-          git config --global user.email "${{ env.ci_email }}"
+          git config --local user.name "${{ env.ci_author }}"
+          git config --local user.email "${{ env.ci_email }}"
           git add ./pdf/*
           git commit -m "${{ env.ci_cmt_msg }}"
           git push
