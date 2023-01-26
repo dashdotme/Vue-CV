@@ -1,4 +1,4 @@
-name: Deploy static content to Pages
+name: Deploy to Pages
 
 on:
   push:
@@ -114,9 +114,3 @@ jobs:
           git add ./pdf/*
           git commit -m "${{ env.ci_cmt_msg }}"
           git push
-
-      - name: Upload PDF
-        uses: actions/upload-artifact@v3
-        with:
-          name: DV_CV_public.pdf
-          path: ./pdf/
