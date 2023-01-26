@@ -20,23 +20,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  # Update Github Pages
+  pages:
+    defaults:
+      run:
+        shell: bash
+        working-directory: .
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    defaults: 
-      run:
-        shell: bash
-        working-directory: .
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v2
-        with:
-          enablement: true
 
       - name: Cache Node.js dependencies
         uses: actions/setup-node@v3
@@ -51,6 +47,11 @@ jobs:
       - name: Build with Vite
         run: npm run build
 
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+        with:
+          enablement: true
+
       - name: Upload build
         uses: actions/upload-pages-artifact@v1
         with:
@@ -59,28 +60,59 @@ jobs:
       - name: Deploy to Github Pages
         uses: actions/deploy-pages@v1
 
-      - name: Cleanup build
+      - name: Cleanup artifact
         uses: geekyeggo/delete-artifact@v2
         with:
           name: github-pages
 
+  # Update public pdf
+  pdf:
+    defaults:
+      run:
+        shell: bash
+        working-directory: .
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache Node.js dependencies
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: npm
+          cache-dependency-path: ./package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Adjust configs to run vue files without server
+      - name: Change build configs for pdf
+        run: |
+          echo filler # to avoid enclosing below in quotes
+          sed -i s#'base: "/Vue-CV/"'#'base: "./"'#g vite.config.ts
+
+      - name: Build with Vite
+        run: npm run build
+
       # Uses puppeteer to build pdf headless
       - name: Generate PDF
-        uses: dashdotme/html-to-pdf-action@v2
+        uses: dashdotme/html-to-pdf-action@v2 # Customized for CORS (required by Vue)
         with:
           htmlFile: ./dist/index.html
           outputFile: ./pdf/DV_CV_public.pdf
 
       # Note: workflow pushes don't trigger workflows
-      - name: Push PDF to git
-        env: 
+      - name: Push PDF to Github
+        env:
           ci_email: 35617767+dashdotme@users.noreply.github.com
           ci_author: dashdotme_pipelines
-          ci_cmt_msg: "chore: updated pdf"
+          ci_cmt_msg: "pipeline: updated pdf"
         run: |
           git config --global user.name "${{ env.ci_author }}"
           git config --global user.email "${{ env.ci_email }}"
-          git commit -a -m "${{ env.ci_cmt_msg }}"
+          git add ./pdf/*
+          git commit -m "${{ env.ci_cmt_msg }}"
           git push
 
       - name: Upload PDF
