@@ -5,6 +5,7 @@ import PhoneIcon from "../icons/IconPhone.vue";
 import MailIcon from "../icons/IconEmail.vue";
 import GitIcon from "../icons/IconGithub.vue";
 import type { Component } from "vue";
+import ProfilePhoto from "@/assets/cv_pic.resized.jpg"
 
 const props = defineProps<{
   useRealData: boolean;
@@ -19,7 +20,7 @@ const sensitiveContent: string[] = [
 ];
 
 const pic = {
-  imageRef: new URL("../../assets/cv_pic.resized.jpg", import.meta.url).href,
+  imageRef: new URL(ProfilePhoto, import.meta.url).href,
   class: "pic",
   alt: "Dashiell Vallance",
 };
