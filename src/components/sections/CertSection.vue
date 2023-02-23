@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import Section from "../templates/ContentTemplate.vue";
 import FigureItem from "../templates/FigureItem.vue";
-import Terraform002CertImage from "@/assets/hashicorp-certified-terraform-associate-002.png";
-import AzFundamentalsCertImage from "@/assets/microsoft-certified-azure-fundamentals.png";
+import Terraform002CertImage from "@/assets/hashicorp-certified-terraform-associate-002-large.png";
+import AzFundamentalsCertImage from "@/assets/microsoft-certified-azure-fundamentals-large.png";
 
 class Cert {
   url: string;
